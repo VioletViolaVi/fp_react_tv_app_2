@@ -1,3 +1,16 @@
 .show-card {
     border: 4px dashed chartreuse;
 }
+
+nav > a {
+    margin: 0 1rem 0 1rem;
+}
+
+form, em {
+    display: block;
+    margin: 1rem 0 1rem 0;
+}
+
+.saved {
+    fill: red;
+}

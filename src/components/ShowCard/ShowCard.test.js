@@ -5,6 +5,7 @@
  import { screen, render } from '@testing-library/react';
  import '@testing-library/jest-dom';
  import React from 'react';
+ import userEvent from '@testing-library/user-event';
  
  import Header from '.';
 import ShowCard from '.';
@@ -30,6 +31,17 @@ import ShowCard from '.';
 
         expect(image).not.toBeTruthy();
 
+    })
+
+    it("Changes the FavouriteButton's class on click", async () => {
+
+        const button = screen.queryByRole("button");
+
+        expect(button.getAttribute("class")).toBe("");
+
+        await userEvent.click(button);
+
+        expect(button.getAttribute("class")).toBe("saved");
     })
 
  })
