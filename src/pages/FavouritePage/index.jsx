@@ -1,16 +1,27 @@
-import React, { useState } from 'react';
+import React from "react";
+import { useSelector } from "react-redux";
 
-import { Header } from '../../components';
+import { Header, ShowCard } from "../../components";
 
 const FavouritePage = () => {
+  const favourites = useSelector((state) => {
+    // console.log("HERE ==> ", state);
+    return state.watchList;
+  });
 
-    const [favourites, setFavourites] = useState([]);
-
-    return <>
-            <Header />
-            { favourites ? <em>You have no shows saved.</em> : favourites.map(f => <ShowCard key={s["show"].id} data={s["show"]} />) }
-           </>
-
-}
+  return (
+    <>
+      <Header />
+      {favourites ? (
+        favourites.map((singleObj) => {
+        //   console.log("HERE ==> ", singleObj);
+          return <ShowCard key={singleObj.id} data={singleObj} />;
+        })
+      ) : (
+        <em>You have no shows saved.</em>
+      )}
+    </>
+  );
+};
 
 export default FavouritePage;

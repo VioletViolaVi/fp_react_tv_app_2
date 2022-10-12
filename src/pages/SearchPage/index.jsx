@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
 
+import { loadShowsAction, setLoadingAction } from '../../actions';
 import { ShowCard, SearchForm, Header } from '../../components';
 
 const SearchPage = () => {
 
-    const [showData, setShowData] = useState([]);
+    const dispatch = useDispatch();
+
+    const showData = useSelector(state => state.showData);
     const [searchString, setSearchString] = useState("Friends");
-    const [isLoading, setIsLoading] = useState(true);
+    const isLoading = useSelector(state => state.loading);
+    const error = useSelector(state => state.error);
 
     useEffect(() => {
 
-        async function searchAPI() {
-            setIsLoading(true);
-            const result = await axios.get(`https://api.tvmaze.com/search/shows?q=${searchString}`);
-            setShowData(result.data);
-            setIsLoading(false);
-        }
-
-        searchAPI();
+        dispatch(setLoadingAction(true));
+        dispatch(loadShowsAction(searchString));
 
     }, [searchString]);
 
@@ -29,6 +27,7 @@ const SearchPage = () => {
     return <>
             <Header />
             <SearchForm handleSearchSubmission={handleSearch}/>
+            {error ? <em>Something has gone wrong...</em> : false}
             {isLoading ? <em>Loading...</em> : showData.map((s) => <ShowCard key={s["show"]["id"]} data={s["show"]} />)}
             </>
 }

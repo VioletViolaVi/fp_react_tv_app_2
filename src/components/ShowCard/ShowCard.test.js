@@ -2,46 +2,45 @@
  * @jest-environment jsdom
  */
 
- import { screen, render } from '@testing-library/react';
- import '@testing-library/jest-dom';
- import React from 'react';
- import userEvent from '@testing-library/user-event';
- 
- import Header from '.';
-import ShowCard from '.';
+import { screen, render } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import React from "react";
+import userEvent from "@testing-library/user-event";
+import { Provider } from "react-redux";
+import store from "../../store";
 
- describe("ShowCard", () => {
+import Header from ".";
+import ShowCard from ".";
 
-    beforeEach(() => {
-        render(<ShowCard data={{ summary: "Test description", name: "Test name"}}/>)
-    })
+describe("ShowCard", () => {
+  beforeEach(() => {
+    render(
+      <Provider store={store}>
+        <ShowCard data={{ summary: "Test description", name: "Test name" }} />
+      </Provider>
+    );
+  });
 
-    it("Displays the appropriate description", () => {
+  it("Displays the appropriate description", () => {
+    const desc = screen.queryByRole("paragraph");
 
-        const desc = screen.queryByRole("paragraph");
+    expect(desc).toBeInTheDocument();
+    expect(desc.textContent).toBe("Test description");
+  });
 
-        expect(desc).toBeInTheDocument();
-        expect(desc.textContent).toBe("Test description");
+  it("Doesn't display an image element when no image is provided.", () => {
+    const image = screen.queryByRole("img");
 
-    })
+    expect(image).not.toBeTruthy();
+  });
 
-    it("Doesn't display an image element when no image is provided.", () => {
+  it("Changes the FavouriteButton's class on click", async () => {
+    const button = screen.queryByRole("button");
 
-        const image = screen.queryByRole("img");
+    expect(button.getAttribute("class")).toBe("");
 
-        expect(image).not.toBeTruthy();
+    await userEvent.click(button);
 
-    })
-
-    it("Changes the FavouriteButton's class on click", async () => {
-
-        const button = screen.queryByRole("button");
-
-        expect(button.getAttribute("class")).toBe("");
-
-        await userEvent.click(button);
-
-        expect(button.getAttribute("class")).toBe("saved");
-    })
-
- })
+    expect(button.getAttribute("class")).toBe("saved");
+  });
+});
